@@ -25,6 +25,24 @@ export function getPopularMovies () {
 
         const combinedResults = []
 
+        //since a constant cannot recieve a concatenated array, i chose to push each object through an iteration
+        for(var y in jsonResponses){
+          for(var x in jsonResponses[y].results){
+            combinedResults.push(jsonResponses[y].results[x])
+          }
+        }
+
+        //for each of the results, add a releaseDate
+        combinedResults.map(function(track){
+          track.releaseYear = parseInt(track.releaseDate);
+          return track;
+        })
+
+        //sort first by releaseYear and then by trackName
+        combinedResults.sort(function(a,b){
+          return a.releaseYear - b.releaseYear  ||  a.trackName.localeCompare(b.trackName)});
+
+
         return dispatch({
           type: 'GET_MOVIES_SUCCESS',
           movies: combinedResults
